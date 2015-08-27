@@ -14,7 +14,10 @@ import javax.persistence.*;
 public class Mblog implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+
 	@Id
+	@SequenceGenerator (name = "MblogSeq", sequenceName = "MBLOGS_SEQ", allocationSize = 1, initialValue = 1)
+	@GeneratedValue (strategy = GenerationType.SEQUENCE, generator = "MblogSeq")
 	private long id;
 
 	private String post;

@@ -6,10 +6,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -47,50 +50,50 @@ public class rwmblogs extends HttpServlet {
 	  {
 		  
 		  HttpSession session = request.getSession();
-		
-		 String countd = (String) session.getAttribute("countd");
-		 System.out.println(countd); 
+		/*
+		 String counte = (String) session.getAttribute("counte");
+		 System.out.println(counte); 
 		 
 		 int count = 0;
 		 int i = 0;
-		 if(countd == null)
+		 if(counte == null)
 		 {
-			 System.out.println("countd");
+			 //System.out.println("countd");
 			 session.setAttribute("count",0);
-			 session.setAttribute("countd", "done");
+			 session.setAttribute("counte", "done");
 			 count = (Integer) session.getAttribute("count");
 			 i = count;
 		 }
 		 else
 		 {
-			 System.out.println("co");
+			// System.out.println("co");
 			 count = (Integer) session.getAttribute("count");
 			 i = count;
 		 }
 		 
 		 
-		 
+		 */
 		 
 		 //session.setAttribute("count", )
 		  
 		  
-		  long id = count + 1;
 		  String post = request.getParameter("post");
 		  
-		  Mblog m = new Mblog();
-		  m.setId(id);
-		  m.setPost(post);
 		  
+		  Mblog m = new Mblog();
+		  m.setPost(post);
+		  //m.setId();
 		  
 		  EntityManager em = DBUtil.getEmFactory().createEntityManager();
 			EntityTransaction trans = em.getTransaction();
 			
 			   
 		
-	if(post != null)		
-	{	  
-		if(!post.isEmpty())	 
-		{
+	if(post != null)
+	{
+		if(!post.isEmpty())
+		{	
+			
 			if(post.length() >50)
 			{
 				//String message = "You cannot go over 50 chars";
@@ -98,44 +101,52 @@ public class rwmblogs extends HttpServlet {
 			}
 			else
 			{
-				
 				trans.begin();
 				try{
+					//System.out.println("a");
 					  em.persist(m);
 					  trans.commit();
 				  }catch (Exception e) {
+					  System.out.println("catch");
 					  trans.rollback();
 				  } finally {
-					  //em.close();
-					  session.setAttribute("count", (count+1));
-					  i++;
+					 // em.close();
+					 // session.setAttribute("count", (count+1));
+					 
 				  }
-			} 
-		} 
+			}
+		}
 	}	
-		  
+	 
+		
+	//String html = "";
+	//EntityManager em = DBUtil.getEmFactory().createEntityManager();
 	
-	tmp = "";
+	String qString = "SELECT m FROM Mblog m";
 	
+	TypedQuery<Mblog> q =  em.createQuery(qString, Mblog.class);
 	
+	List<Mblog> mblogs = q.getResultList();
 	
+	Collections.reverse(mblogs);
 	try {
-		while(i>0)
-		{
-			model.Mblog mblog = em.find(model.Mblog.class, (long)i);
-			System.out.println(mblog.getPost());
-			tmp = tmp +  mblog.getPost() + "<br><br>";
-			i--;
+		tmp = " ";
+		for (Mblog cur : mblogs) {
+			
+			tmp = tmp + cur.getPost() + "<br><br>"; 
 		}
 	} catch (Exception e){
-		System.out.println(e);
+		e.printStackTrace();
 	} finally {
 		em.close();
-		System.out.println("cerrado!");
-		
 	}
-	 
-		  
+
+	
+	
+	
+	
+	
+	
 	      response.setContentType("text/html");
 	      
 	      request.setAttribute("tmp", tmp);
