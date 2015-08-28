@@ -78,9 +78,11 @@ public class Login extends HttpServlet {
 			if(cur.getEmail().equals(email))
 			{
 				found = "yes";
-			
-				System.out.println(cur.getName());
-				System.out.println(cur.getMoto());
+				session.setAttribute("curuser", cur.getEmail());
+			//	System.out.println(cur.getName());
+			//	System.out.println(cur.getMoto());
+			//	System.out.println(cur.getJoindate());
+				
 			}
 			
 		}

@@ -10,36 +10,27 @@
 </head>
 <body>
 
-
-${postform}
- ${err}
- 
- <br>
- 
- <form role="form" action= rwmblogs method="post">
+<div class="container">
+  <div class="jumbotron">
+    <h1 align = "center">${name}</h1>      
+    <p align = "center">${moto}</p>
+    <p align = "center"><i>Join Date: </i>${jd}</p>
+    
+  </div>
+  
+  
+  <form role="form" action= Userprofile method="post">
     <div class="form-group">
-      <label for="search">Search for word:</label>
-      <input type="text" class="form-control" id="search" name="search" placeholder="Enter word">
+      <label for="searchp">Search for word:</label>
+      <input type="text" class="form-control" id="searchp" name="searchp" placeholder="Enter word">
     </div>
     <button type="submit" class="btn btn-default">Search</button>
   </form>
- 
-
- <table class="table">
-    <thead>
-      <tr>
-        <th>Post</th>
-        <th>User</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>${tmp}</td>
-        <td>${users}</td>
-      </tr>
-    </tbody>
-  </table>
-
+  
+  <ul class="list-group">
+    <li class="list-group-item">${tmp}</li>
+  </ul>   
+</div>
 
 </body>
 </html>

@@ -50,4 +50,17 @@ public class Usr implements Serializable {
 	public void setMoto(String moto){
 		this.moto = moto;
 	}
+	
+	private String joindate;
+	
+	public String getJoindate(){
+		return this.joindate;
+	}
+	
+	public void setJoindate(String joindate){
+	this.joindate = joindate;
+	}
+	
+	
+	
 }

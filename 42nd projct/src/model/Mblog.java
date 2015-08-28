@@ -41,4 +41,16 @@ public class Mblog implements Serializable {
 		this.post = post;
 	}
 
+	
+	
+	//own
+	private String uemail;
+	
+	public String getUemail() {
+		return this.uemail;
+	}
+
+	public void setUemail(String uemail) {
+		this.uemail = uemail;
+	}
 }

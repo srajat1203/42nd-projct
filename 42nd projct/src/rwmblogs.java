@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import model.Mblog;
+import model.Usr;
 import customTools.DBUtil;
 
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ public class rwmblogs extends HttpServlet {
 	String err = "<div class=\"alert alert-danger\"> <strong>Error!</strong> You cannot have more than 50 chars </div>";
 	String tmp = "";
 	
+	String users = "";
 	
 	String postform = "<div class=\"container\"> <h2>Enter post</h2> <form role=\"form\" action=\"rwmblogs\"> <div class=\"form-group\"> <label for=\"post\">Post:</label> <input type=\"text\" class=\"form-control\" id=\"post\" name =\"post\" placeholder=\"Enter post\"> </div> <button type=\"submit\" class=\"btn btn-default\">Submit</button> </form></div>";
 	
@@ -79,9 +81,11 @@ public class rwmblogs extends HttpServlet {
 			
 		  String post = request.getParameter("post");
 		  
+		  String uemail = (String) session.getAttribute("curuser");
 		  
 		  Mblog m = new Mblog();
 		  m.setPost(post);
+		  m.setUemail(uemail);
 			
 			if(post != null)
 			{
@@ -120,18 +124,27 @@ public class rwmblogs extends HttpServlet {
 	
 	if(searchq == null)
 	{
-			String qString = "SELECT m FROM Mblog m";
+			String qString = "SELECT m FROM Mblog m order by m.id desc";
 			
 			TypedQuery<Mblog> q =  em.createQuery(qString, Mblog.class);
 			
 			List<Mblog> mblogs = q.getResultList();
 			
-			Collections.reverse(mblogs);
+			//Collections.reverse(mblogs);
 			try {
 				tmp = " ";
+				users = " ";
 				for (Mblog cur : mblogs) {
 					
 					tmp = tmp + cur.getPost() + "<br><br>"; 
+					String cur_user = cur.getUemail();
+					
+					String qname = "SELECT u FROM Usr u where u.email = '"+ cur_user+"'";
+					TypedQuery<Usr> u =  em.createQuery(qname, Usr.class);
+					Usr user = u.getSingleResult();
+					String uname = user.getName();
+					
+					users = users + "<a href=\"Userprofile?user=" + cur_user  + "\">" + uname + "</a><br><br>";
 				}
 			} catch (Exception e){
 				e.printStackTrace();
@@ -156,9 +169,18 @@ public class rwmblogs extends HttpServlet {
 					
 					try {
 						tmp = " ";
+						users = " ";
 						for (Mblog cur : mblogs2) {
 							
 							tmp = tmp + cur.getPost() + "<br><br>"; 
+							String cur_user = cur.getUemail();
+							
+							String qname = "SELECT u FROM Usr u where u.email = '"+ cur_user+"'";
+							TypedQuery<Usr> u =  em.createQuery(qname, Usr.class);
+							Usr user = u.getSingleResult();
+							String uname = user.getName();
+							
+							users = users + "<a href=\"Userprofile?user=" + cur_user  + "\">" + uname + "</a><br><br>";
 						}
 					} catch (Exception e){
 						e.printStackTrace();
@@ -177,7 +199,7 @@ public class rwmblogs extends HttpServlet {
 	      response.setContentType("text/html");
 	      
 	      request.setAttribute("tmp", tmp);
-	      
+	      request.setAttribute("users", users);
 	      
 	      getServletContext()
 	      	.getRequestDispatcher("/rwmblogsdisp.jsp")
