@@ -1,6 +1,7 @@
 package model;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
 
 
@@ -17,6 +18,8 @@ public class Usr implements Serializable {
 	@Id
 	private String email;
 
+	private String name;
+
 	public Usr() {
 	}
 
@@ -28,4 +31,23 @@ public class Usr implements Serializable {
 		this.email = email;
 	}
 
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	// own entries
+	
+	private String moto;
+	
+	public String getMoto(){
+		return this.moto;
+	}
+
+	public void setMoto(String moto){
+		this.moto = moto;
+	}
 }
