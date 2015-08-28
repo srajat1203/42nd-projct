@@ -38,6 +38,11 @@ public class rwmblogs extends HttpServlet {
 	String tmp = "";
 	
 	
+	String postform = "<div class=\"container\"> <h2>Enter post</h2> <form role=\"form\" action=\"rwmblogs\"> <div class=\"form-group\"> <label for=\"post\">Post:</label> <input type=\"text\" class=\"form-control\" id=\"post\" name =\"post\" placeholder=\"Enter post\"> </div> <button type=\"submit\" class=\"btn btn-default\">Submit</button> </form></div>";
+	
+	
+	boolean read;
+	
 	  public void init() throws ServletException
 	  {
 	      // Do required initialization
@@ -48,103 +53,125 @@ public class rwmblogs extends HttpServlet {
 	                    HttpServletResponse response)
 	            throws ServletException, IOException
 	  {
+		  read = true;
 		  
 		  HttpSession session = request.getSession();
-		/*
-		 String counte = (String) session.getAttribute("counte");
-		 System.out.println(counte); 
-		 
-		 int count = 0;
-		 int i = 0;
-		 if(counte == null)
-		 {
-			 //System.out.println("countd");
-			 session.setAttribute("count",0);
-			 session.setAttribute("counte", "done");
-			 count = (Integer) session.getAttribute("count");
-			 i = count;
-		 }
-		 else
-		 {
-			// System.out.println("co");
-			 count = (Integer) session.getAttribute("count");
-			 i = count;
-		 }
-		 
-		 
-		 */
-		 
-		 //session.setAttribute("count", )
+	
+		  String found = (String) session.getAttribute("found");
 		  
 		  
+		  EntityManager em = DBUtil.getEmFactory().createEntityManager();
+			EntityTransaction trans = em.getTransaction();
+			
+	if(found != null)	
+	{
+		if(found.equals("no"))
+		{
+			read = false;
+		}
+	
+		if(found.equals("yes"))	
+		
+		{	
+			request.setAttribute("postform", postform);
+			
+		  	
+			
 		  String post = request.getParameter("post");
 		  
 		  
 		  Mblog m = new Mblog();
 		  m.setPost(post);
-		  //m.setId();
-		  
-		  EntityManager em = DBUtil.getEmFactory().createEntityManager();
-			EntityTransaction trans = em.getTransaction();
 			
-			   
-		
-	if(post != null)
-	{
-		if(!post.isEmpty())
-		{	
-			
-			if(post.length() >50)
+			if(post != null)
 			{
-				//String message = "You cannot go over 50 chars";
-				request.setAttribute("err", err);
-			}
-			else
-			{
-				trans.begin();
-				try{
-					//System.out.println("a");
-					  em.persist(m);
-					  trans.commit();
-				  }catch (Exception e) {
-					  System.out.println("catch");
-					  trans.rollback();
-				  } finally {
-					 // em.close();
-					 // session.setAttribute("count", (count+1));
-					 
-				  }
-			}
+				if(!post.isEmpty())
+				{	
+					
+					if(post.length() >50)
+					{
+						//String message = "You cannot go over 50 chars";
+						request.setAttribute("err", err);
+					}
+					else
+					{
+						trans.begin();
+						try{
+							//System.out.println("a");
+							  em.persist(m);
+							  trans.commit();
+						  }catch (Exception e) {
+							  System.out.println("catch");
+							  trans.rollback();
+						  } finally {
+							 // em.close();
+							 // session.setAttribute("count", (count+1));
+							 
+						  }
+					}
+				}
+			}	
 		}
 	}	
-	 
 		
-	//String html = "";
-	//EntityManager em = DBUtil.getEmFactory().createEntityManager();
 	
-	String qString = "SELECT m FROM Mblog m";
+	String searchq = request.getParameter("search");
+	System.out.println(searchq);
 	
-	TypedQuery<Mblog> q =  em.createQuery(qString, Mblog.class);
-	
-	List<Mblog> mblogs = q.getResultList();
-	
-	Collections.reverse(mblogs);
-	try {
-		tmp = " ";
-		for (Mblog cur : mblogs) {
+	if(searchq == null)
+	{
+			String qString = "SELECT m FROM Mblog m";
 			
-			tmp = tmp + cur.getPost() + "<br><br>"; 
-		}
-	} catch (Exception e){
-		e.printStackTrace();
-	} finally {
-		em.close();
-	}
+			TypedQuery<Mblog> q =  em.createQuery(qString, Mblog.class);
+			
+			List<Mblog> mblogs = q.getResultList();
+			
+			Collections.reverse(mblogs);
+			try {
+				tmp = " ";
+				for (Mblog cur : mblogs) {
+					
+					tmp = tmp + cur.getPost() + "<br><br>"; 
+				}
+			} catch (Exception e){
+				e.printStackTrace();
+			} finally {
+				em.close();
+			}
+	}	
 
+			//Searching word now
+			
+			
+			if(searchq != null)
+			{
+				if(!searchq.isEmpty())
+				{
+					//String search = "SELECT m FROM Mblog m WHERE m.POST LIKE ?";
+					String search = "SELECT m FROM Mblog m where m.post like '%" + searchq +"%'";
+					
+					TypedQuery<Mblog> q2 =  em.createQuery(search, Mblog.class);
+					//q2.setParameter(1, "%" + searchq + "%"); 
+					List<Mblog> mblogs2 = q2.getResultList();
+					
+					try {
+						tmp = " ";
+						for (Mblog cur : mblogs2) {
+							
+							tmp = tmp + cur.getPost() + "<br><br>"; 
+						}
+					} catch (Exception e){
+						e.printStackTrace();
+					} finally {
+						em.close();
+					}
+				}
+				
+			}
 	
-	
-	
-	
+		
+			
+			
 	
 	
 	      response.setContentType("text/html");

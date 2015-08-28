@@ -10,26 +10,22 @@
 </head>
 <body>
 
-
-${postform}
- ${err}
- 
- <br>
- 
- <form role="form" action= rwmblogs method="post">
+<div class="container">
+  <h2>Enter post</h2>
+  <form role="form" action="Login">
     <div class="form-group">
-      <label for="search">Search for word:</label>
-      <input type="text" class="form-control" id="search" name="search" placeholder="Enter word">
+      <label for="post">email:</label>
+      <input type="email" class="form-control" id="email" name ="email" placeholder="Enter email">
     </div>
-    <button type="submit" class="btn btn-default">Search</button>
+    
+    <button type="submit" class="btn btn-default">Submit</button>
   </form>
+
+ <br><br>
+  <a href="rwmblogs" class="btn btn-info" role="button">View mPosts</a>
+
+${loginerr}
+</div>
  
- <h2>List of mPosts</h2>
-<ul class="list-group">
-    <li class="list-group-item">${tmp}</li>
-  </ul>
-
-
-
 </body>
 </html>
