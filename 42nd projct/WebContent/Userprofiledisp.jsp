@@ -12,7 +12,8 @@
 
 <div class="container">
   <div class="jumbotron">
-    <h1 align = "center">${name}</h1>      
+    <h1 align = "center">${name}</h1>
+    <p align = "center">${pic}</p>      
     <p align = "center">${moto}</p>
     <p align = "center"><i>Join Date: </i>${jd}</p>
     

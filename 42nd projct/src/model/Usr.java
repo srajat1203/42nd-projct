@@ -62,5 +62,16 @@ public class Usr implements Serializable {
 	}
 	
 	
+    private String img;
+	
+	public String getImg(){
+		return this.img;
+	}
+	
+	public void setImg(String img){
+		this.img = img;
+	}
+	
+	
 	
 }

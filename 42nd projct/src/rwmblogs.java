@@ -39,6 +39,8 @@ public class rwmblogs extends HttpServlet {
 	String tmp = "";
 	
 	String users = "";
+
+	String img = "";
 	
 	String postform = "<div class=\"container\"> <h2>Enter post</h2> <form role=\"form\" action=\"rwmblogs\"> <div class=\"form-group\"> <label for=\"post\">Post:</label> <input type=\"text\" class=\"form-control\" id=\"post\" name =\"post\" placeholder=\"Enter post\"> </div> <button type=\"submit\" class=\"btn btn-default\">Submit</button> </form></div>";
 	
@@ -134,17 +136,28 @@ public class rwmblogs extends HttpServlet {
 			try {
 				tmp = " ";
 				users = " ";
+				img = "";
 				for (Mblog cur : mblogs) {
 					
-					tmp = tmp + cur.getPost() + "<br><br>"; 
+					String curr_user = cur.getUemail();
+					String finduser = "SELECT u FROM Usr u where u.email='" + curr_user +"'";
+					TypedQuery<Usr> usrq =  em.createQuery(finduser, Usr.class);
+					Usr cuser = usrq.getSingleResult();
+					String url = cuser.getImg();
+					String cimg = getImage(url);
+					
+					
+					tmp = tmp + cimg + cur.getPost() + "<br><br>"; 
 					String cur_user = cur.getUemail();
+					
+					
 					
 					String qname = "SELECT u FROM Usr u where u.email = '"+ cur_user+"'";
 					TypedQuery<Usr> u =  em.createQuery(qname, Usr.class);
 					Usr user = u.getSingleResult();
 					String uname = user.getName();
 					
-					users = users + "<a href=\"Userprofile?user=" + cur_user  + "\">" + uname + "</a><br><br>";
+					users = users + "<a href=\"Userprofile?user=" + cur_user  + "\">" + uname + "</a><br><br><br>";
 				}
 			} catch (Exception e){
 				e.printStackTrace();
@@ -170,9 +183,17 @@ public class rwmblogs extends HttpServlet {
 					try {
 						tmp = " ";
 						users = " ";
+						img = " ";
 						for (Mblog cur : mblogs2) {
 							
-							tmp = tmp + cur.getPost() + "<br><br>"; 
+							String curr_user = cur.getUemail();
+							String finduser = "SELECT u FROM Usr u where u.email='" + curr_user +"'";
+							TypedQuery<Usr> usrq =  em.createQuery(finduser, Usr.class);
+							Usr cuser = usrq.getSingleResult();
+							String url = cuser.getImg();
+							String cimg = getImage(url);
+							
+							tmp = tmp + cimg + cur.getPost() + "<br><br>"; 
 							String cur_user = cur.getUemail();
 							
 							String qname = "SELECT u FROM Usr u where u.email = '"+ cur_user+"'";
@@ -180,7 +201,7 @@ public class rwmblogs extends HttpServlet {
 							Usr user = u.getSingleResult();
 							String uname = user.getName();
 							
-							users = users + "<a href=\"Userprofile?user=" + cur_user  + "\">" + uname + "</a><br><br>";
+							users = users + "<a href=\"Userprofile?user=" + cur_user  + "\">" + uname + "</a><br><br><br>";
 						}
 					} catch (Exception e){
 						e.printStackTrace();
@@ -194,12 +215,20 @@ public class rwmblogs extends HttpServlet {
 		
 			
 			
-	
-	
+	//Bonus
+			
+			//String request.getParameter("image");
+			
+			
+	//Bonus end
+			
+			
+			
 	      response.setContentType("text/html");
 	      
 	      request.setAttribute("tmp", tmp);
 	      request.setAttribute("users", users);
+	      request.setAttribute("image", img);
 	      
 	      getServletContext()
 	      	.getRequestDispatcher("/rwmblogsdisp.jsp")
@@ -219,4 +248,13 @@ public class rwmblogs extends HttpServlet {
 		   
 	   } 
 
+	   
+	  public String getImage(String url)
+	  {
+		  String img = "";
+		  
+		 img = "<img src="+url+" class=\"img-rounded\" alt=\"Cinque Terre\" width=\"40\" height=\"40\">";
+		  
+		  return img;
+	  }
 }

@@ -36,7 +36,7 @@ public class Userprofile extends HttpServlet {
 	
 	String tmp = "";
 	String users = "";
-	
+	String img = "";
 	
 	
 	  public void init() throws ServletException
@@ -79,6 +79,8 @@ public class Userprofile extends HttpServlet {
 		String uname = us.getName();
 		String umoto = us.getMoto();
 		String ujoindate = us.getJoindate();
+		String url = us.getImg();
+		String pic = getImage(url);
 		
 		
 	if(searchp == null)
@@ -147,6 +149,7 @@ public class Userprofile extends HttpServlet {
 	      request.setAttribute("name", uname);
 	      request.setAttribute("moto", umoto);
 	      request.setAttribute("jd", ujoindate);
+	      request.setAttribute("pic", pic);
 	      
 	      
 	      
@@ -168,5 +171,14 @@ public class Userprofile extends HttpServlet {
 	   { 
 		   
 	   } 
+	   
+   public String getImage(String url)
+	  {
+		  String img = "";
+		  
+		 img = "<img src="+url+" class=\"img-rounded\" alt=\"Cinque Terre\" width=\"250\" height=\"500\">";
+		  
+		  return img;
+	  }
 
 }

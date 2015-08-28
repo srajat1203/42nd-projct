@@ -53,4 +53,6 @@ public class Mblog implements Serializable {
 	public void setUemail(String uemail) {
 		this.uemail = uemail;
 	}
+	
+	
 }
